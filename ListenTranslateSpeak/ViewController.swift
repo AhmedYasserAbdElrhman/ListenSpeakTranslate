@@ -9,6 +9,7 @@ import UIKit
 import Speech
 import AVFoundation
 import NaturalLanguage
+import AWSTranslate
 enum Usage {
     case fromArabic
     case toArabic
@@ -54,8 +55,8 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
         // Disable the record buttons until authorization has been granted.
         recordButton.isEnabled = false
+        synthesizer.delegate = self
         speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: type.localeIdentifier))!
-        translate(type: type)
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -168,6 +169,12 @@ class ViewController: UIViewController {
         }
     }
     @IBAction private func translateTapped(_ sender: UIButton) {
+        guard let text = listenedTextView.text,
+        !text.isEmpty else { return }
+        translate(text) { [weak self] result in
+            guard let self else { return }
+            self.translatedTextView.text = result
+        }
         
     }
     @IBAction private func speakTapped(_ sender: UIButton) {
@@ -189,4 +196,36 @@ class ViewController: UIViewController {
         type.toggle()
     }
 }
+extension ViewController {
+    func translate(_ text: String, completion: @escaping (String?) -> Void) {
+        DispatchQueue.global().async {
+            let translateClient = AWSTranslate.default()
+            let translateRequest = AWSTranslateTranslateTextRequest()
+            guard let translateRequest else { return }
+            translateRequest.sourceLanguageCode = self.type == .fromArabic ? "ar" : "en"
+            translateRequest.targetLanguageCode = self.type == .fromArabic ? "en" : "ar"
+            translateRequest.text = text
+                    
+            let callback: (AWSTranslateTranslateTextResponse?, Error?) -> Void = { (response, error) in
+               guard let response = response else {
+                  print("Got error \(error)")
+                  return
+               }
+                        
+               if let translatedText = response.translatedText {
+                   DispatchQueue.main.async {
+                       completion(translatedText)
+                   }
+                  print(translatedText)
+               }
+            }
+                    
+            translateClient.translateText(translateRequest, completionHandler: callback)
+        }
 
+    }
+
+}
+extension ViewController: AVSpeechSynthesizerDelegate {
+    
+}

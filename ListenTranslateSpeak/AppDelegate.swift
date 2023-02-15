@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import AWSCore
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -14,7 +14,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        initAWS()
         return true
+    }
+    func initAWS() {
+        let credentialsProvider = AWSCognitoCredentialsProvider(
+            regionType: .USEast1,
+            identityPoolId: "us-east-1:7e020ec0-5d90-4e88-85c6-894162a45663")
+        let configuration = AWSServiceConfiguration(
+            region: .USEast1,
+            credentialsProvider: credentialsProvider)
+        AWSServiceManager.default().defaultServiceConfiguration = configuration
     }
 
     // MARK: UISceneSession Lifecycle
