@@ -14,6 +14,7 @@
 		9484B9A6299CDD5600EBA755 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9484B9A5299CDD5600EBA755 /* Assets.xcassets */; };
 		9484B9A9299CDD5600EBA755 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9484B9A7299CDD5600EBA755 /* LaunchScreen.storyboard */; };
 		9484B9B1299CE5F700EBA755 /* ViewController+SpeechDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9484B9B0299CE5F700EBA755 /* ViewController+SpeechDelegate.swift */; };
+		9484B9B5299D01C000EBA755 /* SwiftGoogleTranslate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9484B9B4299D01C000EBA755 /* SwiftGoogleTranslate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		9484B9A8299CDD5600EBA755 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9484B9AA299CDD5600EBA755 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9484B9B0299CE5F700EBA755 /* ViewController+SpeechDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+SpeechDelegate.swift"; sourceTree = "<group>"; };
+		9484B9B4299D01C000EBA755 /* SwiftGoogleTranslate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftGoogleTranslate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +64,7 @@
 				9484B99E299CDD5300EBA755 /* SceneDelegate.swift */,
 				9484B9A0299CDD5300EBA755 /* ViewController.swift */,
 				9484B9B0299CE5F700EBA755 /* ViewController+SpeechDelegate.swift */,
+				9484B9B4299D01C000EBA755 /* SwiftGoogleTranslate.swift */,
 				9484B9A2299CDD5300EBA755 /* Main.storyboard */,
 				9484B9A5299CDD5600EBA755 /* Assets.xcassets */,
 				9484B9A7299CDD5600EBA755 /* LaunchScreen.storyboard */,
@@ -142,6 +145,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9484B9A1299CDD5300EBA755 /* ViewController.swift in Sources */,
+				9484B9B5299D01C000EBA755 /* SwiftGoogleTranslate.swift in Sources */,
 				9484B99D299CDD5300EBA755 /* AppDelegate.swift in Sources */,
 				9484B99F299CDD5300EBA755 /* SceneDelegate.swift in Sources */,
 				9484B9B1299CE5F700EBA755 /* ViewController+SpeechDelegate.swift in Sources */,

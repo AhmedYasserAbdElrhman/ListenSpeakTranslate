@@ -7,6 +7,8 @@
 
 import UIKit
 import Speech
+import AVFoundation
+import NaturalLanguage
 enum Usage {
     case fromArabic
     case toArabic
@@ -45,12 +47,15 @@ class ViewController: UIViewController {
             speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: type.localeIdentifier))!
         }
     }
+    // Speaking
+    let synthesizer = AVSpeechSynthesizer()
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         // Disable the record buttons until authorization has been granted.
         recordButton.isEnabled = false
         speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: type.localeIdentifier))!
+        translate(type: type)
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -166,7 +171,18 @@ class ViewController: UIViewController {
         
     }
     @IBAction private func speakTapped(_ sender: UIButton) {
-        
+        guard let text = translatedTextView.text,
+        !text.isEmpty else { return }
+        self.synthesizer.stopSpeaking(at: .immediate)
+        let lang = type == .fromArabic ? NLLanguage.english : NLLanguage.arabic
+        let utterance = AVSpeechUtterance(string: text)
+        utterance.rate = AVSpeechUtteranceDefaultSpeechRate;
+        utterance.preUtteranceDelay = 0.25;
+        utterance.postUtteranceDelay = 0.25;
+        utterance.voice = AVSpeechSynthesisVoice(language: lang.rawValue)
+
+        self.synthesizer.speak(utterance)
+
     }
     @IBAction private func switchLanguageAction(_ sender: UIButton) {
         sender.isSelected.toggle()
