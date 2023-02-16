@@ -50,6 +50,16 @@ class ViewController: UIViewController {
     }
     // Speaking
     let synthesizer = AVSpeechSynthesizer()
+    lazy var availableARVoices: [AVSpeechSynthesisVoice] = {
+        let availableVoices = AVSpeechSynthesisVoice.speechVoices()
+        let filtered = availableVoices.filter({$0.language.contains("ar")})
+        return filtered
+    }()
+    lazy var availableENVoices: [AVSpeechSynthesisVoice] = {
+        let availableVoices = AVSpeechSynthesisVoice.speechVoices()
+        let filtered = availableVoices.filter({$0.language.contains("en")})
+        return filtered
+    }()
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -101,7 +111,7 @@ class ViewController: UIViewController {
         
         // Configure the audio session for the app.
         let audioSession = AVAudioSession.sharedInstance()
-        try audioSession.setCategory(.record, mode: .measurement, options: .duckOthers)
+        try audioSession.setCategory(.playAndRecord, mode: .measurement, options: .defaultToSpeaker)
         try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
         let inputNode = audioEngine.inputNode
 
@@ -186,11 +196,25 @@ class ViewController: UIViewController {
         utterance.rate = AVSpeechUtteranceDefaultSpeechRate;
         utterance.preUtteranceDelay = 0.25;
         utterance.postUtteranceDelay = 0.25;
-        utterance.voice = AVSpeechSynthesisVoice(language: lang.rawValue)
+        let currentFilteredVoices = lang == .arabic ? availableARVoices : availableENVoices
+        if let randomVoice = currentFilteredVoices.randomElement() {
+            utterance.voice = randomVoice
 
-        self.synthesizer.speak(utterance)
+            self.synthesizer.speak(utterance)
+        }
+        defer {
+            disableAVSession()
+        }
 
     }
+    private func disableAVSession() {
+        do {
+            try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        } catch {
+            print("audioSession properties weren't disable.")
+        }
+    }
+
     @IBAction private func switchLanguageAction(_ sender: UIButton) {
         sender.isSelected.toggle()
         type.toggle()
