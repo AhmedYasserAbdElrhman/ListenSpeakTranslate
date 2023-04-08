@@ -50,6 +50,8 @@ class ViewController: UIViewController {
     }
     // Speaking
     let synthesizer = AVSpeechSynthesizer()
+    // Get available downloaded voices on device
+    // iOS 16 Bug
     lazy var availableARVoices: [AVSpeechSynthesisVoice] = {
         let availableVoices = AVSpeechSynthesisVoice.speechVoices()
         let filtered = availableVoices.filter({$0.language.contains("ar")})
@@ -188,6 +190,7 @@ class ViewController: UIViewController {
         
     }
     @IBAction private func speakTapped(_ sender: UIButton) {
+        defer { disableAVSession() }
         guard let text = translatedTextView.text,
         !text.isEmpty else { return }
         self.synthesizer.stopSpeaking(at: .immediate)
@@ -196,18 +199,19 @@ class ViewController: UIViewController {
         utterance.rate = AVSpeechUtteranceDefaultSpeechRate;
         utterance.preUtteranceDelay = 0.25;
         utterance.postUtteranceDelay = 0.25;
+        // iOS 16 Bug
+        // I get random elmemnt of available current language voices
         let currentFilteredVoices = lang == .arabic ? availableARVoices : availableENVoices
         if let randomVoice = currentFilteredVoices.randomElement() {
             utterance.voice = randomVoice
 
             self.synthesizer.speak(utterance)
         }
-        defer {
-            disableAVSession()
-        }
-
+        // Also you can init voice with Language identifier
+        let voice = AVSpeechSynthesisVoice(language: lang.rawValue)
     }
     private func disableAVSession() {
+        // Deactivates app’s audio session to avoid conflict with recording session
         do {
             try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
         } catch {
